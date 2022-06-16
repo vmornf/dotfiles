@@ -2603,10 +2603,10 @@ view(const Arg *arg)
 	/* if ((arg->ui & TAGMASK) == ( 1 << 8)){ */
 	if ((arg->ui & TAGMASK) == (000000001)){
 		enablegaps = 0;
-		/* arrange(NULL); */
+		arrange(NULL);
 	}else{
 		enablegaps = 1;
-		/* arrange(NULL); */
+		arrange(NULL);
 	}
 
 	selmon->seltags ^= 1; /* toggle sel tagset */
