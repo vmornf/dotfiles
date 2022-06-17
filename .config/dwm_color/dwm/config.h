@@ -19,8 +19,6 @@ static int swallowfloating    = 0;        /* 1 means swallow floating windows by
 static int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
 static int showbar            = 1;        /* 0 means no bar */
 static int topbar             = 1;        /* 0 means bottom bar */
-/* static const Bool viewontag         = True;     /1* Switch view on tag switch *1/ */
-static int viewontag         = 1;     /* Switch view on tag switch */
 /* static char *fonts[]          = { "Linux Libertine Mono:size=12", "Mono:pixelsize=12:antialias=true:autohint=true", "FontAwesome:size=15","FontAwesome5Brands:size=13:antialias:true", "FontAwesome5Free:size=13:antialias:true", "FontAwesome5Free:style=Solid:size=13:antialias:true","JetBrainsMono Nerd Font:size=12:style=bold:antialias=true:autohint=true", "Nerd Font Complete Mono:size=13", "JoyPixels:pixelsize=10:antialias=true:autohint=true", "Inconsolata Nerd Font:size=15", "Nerd Font Complete Mono:size=13" }; */
 static const char *fonts[]               = { "JetBrainsMono Nerd Font:size=11:style=bold:antialias=true:autohint=true", "JoyPixels:pixelsize=13:antialias=true:autohint=true" };
 /* static char *fonts[]          = { "Iosevka, Iosevka Nerd Font:size=12", "Mono:pixelsize=12:antialias=true:autohint=true", "Nerd Font:size=16", "Nerd Font Mono:size=16", "Nerd Font Mono:size=16", "Inconsolata Nerd Font:size=16" }; */
@@ -104,12 +102,13 @@ static const Layout layouts[] = {
 #define MODKEY1 Mod1Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
+	{ MODKEY|ControlMask,           KEY,      noviewontag,     {.ui = 1 << TAG} }, \
 	{ MODKEY|ShiftMask,             KEY,      tag,            {.ui = 1 << TAG} }, \
-	{ MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} },
+	{ MODKEY|ControlMask|ShiftMask, KEY,      toggleview,      {.ui = 1 << TAG} },
+	/* { MODKEY|ControlMask|ShiftMask, KEY,      toggletag,      {.ui = 1 << TAG} }, */
 #define STACKKEYS(MOD,ACTION) \
-	{ MOD,	XK_j,	ACTION##stack,	{.i = INC(+2) } }, \
-	{ MOD,	XK_k,	ACTION##stack,	{.i = INC(-2) } }, \
+	{ MOD,	XK_j,	ACTION##stack,	{.i = INC(+1) } }, \
+	{ MOD,	XK_k,	ACTION##stack,	{.i = INC(-1) } }, \
 	{ MOD,	XK_h,	ACTION##stack,	{.i = INC(+1) } }, \
 	{ MOD,	XK_l,	ACTION##stack,	{.i = INC(-1) } }, \
 
@@ -260,12 +259,13 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_a,     spawn,               SHCMD("picom-trans -c -5")},
 	{ MODKEY|ControlMask,             XK_a,     spawn,               SHCMD("picom-trans -c +5")},
 	{ MODKEY,						XK_section,			spawn,				SHCMD("~/.local/bin/my_scripts/loadEww.sh") },
-	{ MODKEY|ShiftMask,			XK_section,		toggleviewontag,	{0} },
 	
 	{ MODKEY,			XK_Left,	focusmon,	{.i = -1 } },
 	{ MODKEY|ShiftMask,		XK_Left,	tagmon,		{.i = -1 } },
 	{ MODKEY,			XK_Right,	focusmon,	{.i = +1 } },
 	{ MODKEY|ShiftMask,		XK_Right,	tagmon,		{.i = +1 } },
+	/* { MODKEY,			XK_comma,	focusmon,		{.i = -1 } }, */
+	/* { MODKEY,			XK_minus,	focusmon,		{.i = +1 } }, */
 	{ MODKEY,			XK_Page_Up,	shiftview,	{ .i = -1 } },
 	{ MODKEY|ShiftMask,		XK_Page_Up,	shifttag,	{ .i = -1 } },
 	{ MODKEY,			XK_Page_Down,	shiftview,	{ .i = +1 } },
