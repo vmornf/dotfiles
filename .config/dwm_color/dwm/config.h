@@ -246,10 +246,8 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,			XK_p,		togglebar,	{0} },
 	{ MODKEY,			XK_n,		spawn,		SHCMD("~/.local/bin/my_scripts/nautilus_wd.sh") },
 	{ MODKEY|ShiftMask,		XK_n,		spawn,		SHCMD("nautilus -w --no-desktop") },
-	{ MODKEY,			XK_m,		spawn,		SHCMD("spotify") },
-	{ MODKEY|ShiftMask,			XK_m,		spawn,		 SHCMD("flatpak run org.jamovi.jamovi") },
+	{ MODKEY|ShiftMask,			XK_m,		spawn,		 SHCMD("spotify") },
 	{ MODKEY|ControlMask,			XK_m,		spawn,		 SHCMD("~/.local/bin/my_scripts/tstock.sh") },
-	{ MODKEY,			XK_comma,	spawn,		SHCMD("mpc prev") },
 	{ MODKEY|ShiftMask,             XK_period,     spawn,               SHCMD("i3lock-fancy && ~/.local/bin/my_scripts/alert_exit.sh && systemctl suspend")},
 	{ MODKEY|ShiftMask,             XK_comma,     spawn,               SHCMD("~/.local/bin/my_scripts/alert_exit.sh && ~/.local/bin/my_scripts/suspend.sh")},
 	{ MODKEY,			XK_v,	spawn,		SHCMD("~/.local/bin/my_scripts/clip_history.sh") },
@@ -264,8 +262,8 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,		XK_Left,	tagmon,		{.i = -1 } },
 	{ MODKEY,			XK_Right,	focusmon,	{.i = +1 } },
 	{ MODKEY|ShiftMask,		XK_Right,	tagmon,		{.i = +1 } },
-	/* { MODKEY,			XK_comma,	focusmon,		{.i = -1 } }, */
-	/* { MODKEY,			XK_minus,	focusmon,		{.i = +1 } }, */
+	{ MODKEY,			XK_m,		focusmon,		{.i = -1 } },
+	{ MODKEY,			XK_comma,	focusmon,		{.i = +1 } },
 	{ MODKEY,			XK_Page_Up,	shiftview,	{ .i = -1 } },
 	{ MODKEY|ShiftMask,		XK_Page_Up,	shifttag,	{ .i = -1 } },
 	{ MODKEY,			XK_Page_Down,	shiftview,	{ .i = +1 } },
