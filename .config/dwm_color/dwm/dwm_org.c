@@ -928,9 +928,6 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
 	char *text;
 	char *p;
 	colorincr = 0;
-	FILE *ptr;
-	char ch;
-	int hotbool = 0;
 
 	len = strlen(stext) + 1 ;
 	if (!(text = (char*) malloc(sizeof(char)*len)))
@@ -986,20 +983,26 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
 
 			while (text[++i] != '^') {
 				if (text[i] == '1') {
+					char col1[] = "#98971a";
 					drw_clr_create(drw, &drw->scheme[ColFg], col1);
 				} else if (text[i] == '2') {
 					// Check if weather is hot or not
+					FILE *ptr;
+					char ch;
 					ptr = fopen("/home/jonas/.local/share/weatherreport", "r");
+					int hotbool = 0;
 					if (ptr == NULL) printf("Fail to read wr...");
 					do{
 						ch = fgetc(ptr);
 						// Check if contains + and 2 (= hot)
 						if (hotbool){
 							if (ch == '2' || ch == '3'){
-								drw_clr_create(drw, &drw->scheme[ColFg], col21);
+								char col2[] = "#fb4934";
+								drw_clr_create(drw, &drw->scheme[ColFg], col2);
 								break;
 							}else{
-								drw_clr_create(drw, &drw->scheme[ColFg], col22);
+								char col2[] = "#ebdbb2";
+								drw_clr_create(drw, &drw->scheme[ColFg], col2);
 								break;
 							}
 						}
@@ -1007,22 +1010,28 @@ drawstatusbar(Monitor *m, int bh, char* stext) {
 						if (ch == '+'){
 							hotbool = 1;
 						}else if (ch == '-') {
-							drw_clr_create(drw, &drw->scheme[ColFg], col23);
+							char col2[] = "#458588";
+							drw_clr_create(drw, &drw->scheme[ColFg], col2);
 							break;
 						}
 						else{
-							drw_clr_create(drw, &drw->scheme[ColFg], col24);
+							char col2[] = "#ebdbb2";
+							drw_clr_create(drw, &drw->scheme[ColFg], col2);
 							break;
 						}
 					} while (ch != EOF);
 					fclose(ptr);
 				} else if (text[i] == '3') {
+					char col3[] = "#fabd2f";
 					drw_clr_create(drw, &drw->scheme[ColFg], col3);
 				} else if (text[i] == '4') {
+					char col4[] = "#83a598";
 					drw_clr_create(drw, &drw->scheme[ColFg], col4);
 				} else if (text[i] == '5') {
+					char col5[] = "#d3869b";
 					drw_clr_create(drw, &drw->scheme[ColFg], col5);
 				} else if (text[i] == '6') {
+					char col6[] = "#8ec07c";
 					drw_clr_create(drw, &drw->scheme[ColFg], col6);
 				}
 			}

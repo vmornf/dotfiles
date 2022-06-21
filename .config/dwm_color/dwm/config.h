@@ -21,28 +21,32 @@ static int showbar            = 1;        /* 0 means no bar */
 static int topbar             = 1;        /* 0 means bottom bar */
 /* static char *fonts[]          = { "Linux Libertine Mono:size=12", "Mono:pixelsize=12:antialias=true:autohint=true", "FontAwesome:size=15","FontAwesome5Brands:size=13:antialias:true", "FontAwesome5Free:size=13:antialias:true", "FontAwesome5Free:style=Solid:size=13:antialias:true","JetBrainsMono Nerd Font:size=12:style=bold:antialias=true:autohint=true", "Nerd Font Complete Mono:size=13", "JoyPixels:pixelsize=10:antialias=true:autohint=true", "Inconsolata Nerd Font:size=15", "Nerd Font Complete Mono:size=13" }; */
 static const char *fonts[]               = { "JetBrainsMono Nerd Font:size=11:style=bold:antialias=true:autohint=true", "JoyPixels:pixelsize=13:antialias=true:autohint=true" };
-/* static char *fonts[]          = { "Iosevka, Iosevka Nerd Font:size=12", "Mono:pixelsize=12:antialias=true:autohint=true", "Nerd Font:size=16", "Nerd Font Mono:size=16", "Nerd Font Mono:size=16", "Inconsolata Nerd Font:size=16" }; */
 static char normbgcolor[]           = "#222222";
 static char normbordercolor[]       = "#444444";
 static char normfgcolor[]           = "#bbbbbb";
 static char selfgcolor[]            = "#eeeeee";
 static char selbordercolor[]        = "#770000";
 static char selbgcolor[]            = "#005577";
-static const char col_gray1[]       = "#bbbbbb";
-static const char col_gray2[]       = "#eeeeee";
-static const char col_cyan[]        = "#005577";
-static const char col_black[]       = "#000000";
-static const char col_red[]         = "#ff0000";
-static const char col_yellow[]      = "#ffff00";
-static const char col_white[]       = "#ffffff";
+static const char col1[] = "#98971a";
+static const char col21[] = "#fb4934";
+static const char col22[] = "#ebdbb2";
+static const char col23[] = "#458588";
+static const char col24[] = "#ebdbb2";
+static const char col3[] = "#fabd2f";
+static const char col4[] = "#83a598";
+static const char col5[] = "#d3869b";
+static const char col6[] = "#8ec07c";
+/* static const char col_gray1[]       = "#bbbbbb"; */
+/* static const char col_gray2[]       = "#eeeeee"; */
+/* static const char col_cyan[]        = "#005577"; */
+/* static const char col_black[]       = "#000000"; */
+/* static const char col_red[]         = "#ff0000"; */
+/* static const char col_yellow[]      = "#ffff00"; */
+/* static const char col_white[]       = "#ffffff"; */
 static char *colors[][3] = {
        /*               fg           bg           border   */
-       /* [SchemeNorm] = { normfgcolor, normbgcolor, normbordercolor }, */
-       /* [SchemeSel]  = { selfgcolor,  selbgcolor,  selbordercolor  }, */
 		[SchemeNorm] =	 { normfgcolor, normbgcolor,  normbordercolor },
 		[SchemeSel]  =	 { selfgcolor, selbgcolor,   selbordercolor },
-		[SchemeWarn] =	 { col_black, col_yellow, col_red },
-		[SchemeUrgent]=	 { col_white, col_red,    col_red },
 };
 
 typedef struct {
