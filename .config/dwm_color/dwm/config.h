@@ -36,13 +36,6 @@ static const char col3[] = "#fabd2f";
 static const char col4[] = "#83a598";
 static const char col5[] = "#d3869b";
 static const char col6[] = "#8ec07c";
-/* static const char col_gray1[]       = "#bbbbbb"; */
-/* static const char col_gray2[]       = "#eeeeee"; */
-/* static const char col_cyan[]        = "#005577"; */
-/* static const char col_black[]       = "#000000"; */
-/* static const char col_red[]         = "#ff0000"; */
-/* static const char col_yellow[]      = "#ffff00"; */
-/* static const char col_white[]       = "#ffffff"; */
 static char *colors[][3] = {
        /*               fg           bg           border   */
 		[SchemeNorm] =	 { normfgcolor, normbgcolor,  normbordercolor },
@@ -113,8 +106,8 @@ static const Layout layouts[] = {
 #define STACKKEYS(MOD,ACTION) \
 	{ MOD,	XK_j,	ACTION##stack,	{.i = INC(+1) } }, \
 	{ MOD,	XK_k,	ACTION##stack,	{.i = INC(-1) } }, \
-	{ MOD,	XK_h,	ACTION##stack,	{.i = INC(+1) } }, \
-	{ MOD,	XK_l,	ACTION##stack,	{.i = INC(-1) } }, \
+	/* { MOD,	XK_h,	ACTION##stack,	{.i = INC(+1) } }, \ */
+	/* { MOD,	XK_l,	ACTION##stack,	{.i = INC(-1) } }, \ */
 
 	/* { MOD,  XK_v,   ACTION##stack,  {.i = 0 } }, \ */
 	/* { MOD, XK_grave, ACTION##stack, {.i = PREVSEL } }, \ */
@@ -266,8 +259,8 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,		XK_Left,	tagmon,		{.i = -1 } },
 	{ MODKEY,			XK_Right,	focusmon,	{.i = +1 } },
 	{ MODKEY|ShiftMask,		XK_Right,	tagmon,		{.i = +1 } },
-	{ MODKEY,			XK_m,		focusmon,		{.i = -1 } },
-	{ MODKEY,			XK_comma,	focusmon,		{.i = +1 } },
+	{ MODKEY,			XK_h,		focusmon,		{.i = -1 } },
+	{ MODKEY,			XK_l,	focusmon,		{.i = +1 } },
 	{ MODKEY,			XK_Page_Up,	shiftview,	{ .i = -1 } },
 	{ MODKEY|ShiftMask,		XK_Page_Up,	shifttag,	{ .i = -1 } },
 	{ MODKEY,			XK_Page_Down,	shiftview,	{ .i = +1 } },
