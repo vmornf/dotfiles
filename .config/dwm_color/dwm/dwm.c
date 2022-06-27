@@ -140,7 +140,6 @@ struct Monitor {
 	int gappiv;           /* vertical gap between windows */
 	int gappoh;           /* horizontal outer gaps */
 	int gappov;           /* vertical outer gaps */
-	/* int gappx;			/1* gaps between windows *1/ */
 	unsigned int seltags;
 	unsigned int sellt;
 	unsigned int tagset[2];
@@ -998,20 +997,15 @@ drawbar(Monitor *m)
 	int boxs = drw->fonts->h / 9;
 	int boxw = drw->fonts->h / 6 + 2;
 	unsigned int i, occ = 0, urg = 0;
-	char *ts = stext;
-	char *tp = stext;
-	int tx = 0;
-	char ctmp;
+	/* char *ts = stext; */
+	/* char *tp = stext; */
+	/* int tx = 0; */
+	/* char ctmp; */
 	Client *c;
 
 	/* draw status first so it can be overdrawn by tags later */
 	if (m == selmon) { /* status is only drawn on selected monitor */
 		tw = m->ww - drawstatusbar(m, bh, stext);
-		/* FILE *fp; */
-		/* fp = fopen("/home/jonas/test.txt", "w"); */
-		/* /1* fprintf(fp, stext); *1/ */
-		/* fprintf(fp, stext); */
-		/* fclose(fp); */
 	}
 
 	for (c = m->clients; c; c = c->next) {
