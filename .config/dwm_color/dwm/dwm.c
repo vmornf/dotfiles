@@ -28,9 +28,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <assert.h>
+/* #include <assert.h> */
 #include <sys/types.h>
-#include <sys/stat.h>
+/* #include <sys/stat.h> */
 #include <sys/wait.h>
 #include <X11/cursorfont.h>
 #include <X11/keysym.h>
@@ -140,7 +140,7 @@ struct Monitor {
 	int gappiv;           /* vertical gap between windows */
 	int gappoh;           /* horizontal outer gaps */
 	int gappov;           /* vertical outer gaps */
-	int gappx;			/* gaps between windows */
+	/* int gappx;			/1* gaps between windows *1/ */
 	unsigned int seltags;
 	unsigned int sellt;
 	unsigned int tagset[2];
@@ -179,7 +179,6 @@ typedef struct {
 } ResourcePref;
 
 /* function declarations */
-static int colorincr;
 static void applyrules(Client *c);
 static int applysizehints(Client *c, int *x, int *y, int *w, int *h, int interact);
 static void arrange(Monitor *m);
@@ -297,8 +296,8 @@ static pid_t winpid(Window w);
 
 /* variables */
 static const char broken[] = "broken";
-static const char dwmdir[] = "dwm";
-static const char localshare[] = ".local/share";
+/* static const char dwmdir[] = "dwm"; */
+/* static const char localshare[] = ".local/share"; */
 /* static char stext[256]; */
 static char stext[1024];
 static char rawstext[256];
@@ -580,7 +579,7 @@ buttonpress(XEvent *e)
 		} else if (ev->x < x + blw)
 			click = ClkLtSymbol;
 		else if (ev->x > (x = selmon->ww - TEXTW(stext) + lrpad)) {
-			click = ClkStatusText; 
+			click = ClkStatusText;
 
 			char *text = rawstext;
 			int i = -1;
@@ -600,7 +599,6 @@ buttonpress(XEvent *e)
 			}
 		} else
 			click = ClkWinTitle;
-			/* click = ClkStatusText; */
 	} else if ((c = wintoclient(ev->window))) {
 		focus(c);
 		restack(selmon);
@@ -871,63 +869,12 @@ dirtomon(int dir)
 	return m;
 }
 
-
-char** str_split(char* a_str, const char a_delim)
-{
-    char** result    = 0;
-    size_t count     = 0;
-    char* tmp        = a_str;
-    char* last_comma = 0;
-    char delim[2];
-    delim[0] = a_delim;
-    delim[1] = 0;
-
-    /* Count how many elements will be extracted. */
-    while (*tmp)
-    {
-        if (a_delim == *tmp)
-        {
-            count++;
-            last_comma = tmp;
-        }
-        tmp++;
-    }
-
-    /* Add space for trailing token. */
-    count += last_comma < (a_str + strlen(a_str) - 1);
-
-    /* Add space for terminating null string so caller
-       knows where the list of returned strings ends. */
-    count++;
-
-    result = malloc(sizeof(char*) * count);
-
-    if (result)
-    {
-        size_t idx  = 0;
-        char* token = strtok(a_str, delim);
-
-        while (token)
-        {
-            assert(idx < count);
-            *(result + idx++) = strdup(token);
-            token = strtok(0, delim);
-        }
-        assert(idx == count - 1);
-        *(result + idx) = 0;
-    }
-
-    return result;
-}
-
-
 int
 drawstatusbar(Monitor *m, int bh, char* stext) {
 	int ret, i, w, x, len;
 	short isCode = 0;
 	char *text;
 	char *p;
-	colorincr = 0;
 	FILE *ptr;
 	char ch;
 	int hotbool = 0;
@@ -1683,6 +1630,7 @@ resizeclient(Client *c, int x, int y, int w, int h)
 	c->oldw = c->w; c->w = wc.width = w;
 	c->oldh = c->h; c->h = wc.height = h;
 	wc.border_width = c->bw;
+	// Don't show border if floating or if only 1 client
 	if (((nexttiled(c->mon->clients) == c && !nexttiled(c->next))
 	    || &monocle == c->mon->lt[c->mon->sellt]->arrange)
 	    && !c->isfullscreen && !c->isfloating) {
@@ -2018,6 +1966,7 @@ setup(void)
 	/* scheme = ecalloc(LENGTH(colors), sizeof(Clr *)); */
 	scheme = ecalloc(LENGTH(colors) + 1, sizeof(Clr *));
 	scheme[LENGTH(colors)] = drw_scm_create(drw, colors[0], 3);
+
 	for (i = 0; i < LENGTH(colors); i++)
 		scheme[i] = drw_scm_create(drw, colors[i], 3);
 	/* init bars */
@@ -2598,10 +2547,8 @@ view(const Arg *arg)
 	/* if ((arg->ui & TAGMASK) == ( 1 << 8)){ */
 	if ((arg->ui & TAGMASK) == (000000001)){
 		enablegaps = 0;
-		/* arrange(NULL); */
 	}else{
 		enablegaps = 1;
-		/* arrange(NULL); */
 	}
 
 	selmon->seltags ^= 1; /* toggle sel tagset */
@@ -2874,7 +2821,7 @@ main(int argc, char *argv[])
 	runAutostart();
 	/* runautostart(); */
 	enablegaps = 0;
-	arrange(NULL);
+	arrange(selmon);
 	run();
 	if(restart) execvp(argv[0], argv);
 	cleanup();
