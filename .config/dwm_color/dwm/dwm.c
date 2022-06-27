@@ -28,9 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-/* #include <assert.h> */
 #include <sys/types.h>
-/* #include <sys/stat.h> */
 #include <sys/wait.h>
 #include <X11/cursorfont.h>
 #include <X11/keysym.h>
@@ -295,8 +293,6 @@ static pid_t winpid(Window w);
 
 /* variables */
 static const char broken[] = "broken";
-/* static const char dwmdir[] = "dwm"; */
-/* static const char localshare[] = ".local/share"; */
 /* static char stext[256]; */
 static char stext[1024];
 static char rawstext[256];
@@ -997,10 +993,6 @@ drawbar(Monitor *m)
 	int boxs = drw->fonts->h / 9;
 	int boxw = drw->fonts->h / 6 + 2;
 	unsigned int i, occ = 0, urg = 0;
-	/* char *ts = stext; */
-	/* char *tp = stext; */
-	/* int tx = 0; */
-	/* char ctmp; */
 	Client *c;
 
 	/* draw status first so it can be overdrawn by tags later */
@@ -1579,8 +1571,12 @@ propertynotify(XEvent *e)
 			drawbars();
 			break;
 		}
-		if (ev->atom == XA_WM_NAME || ev->atom == netatom[NetWMName])
+		if (ev->atom == XA_WM_NAME || ev->atom == netatom[NetWMName]){
 			updatetitle(c);
+			if (c == c->mon->sel)
+				drawbar(c->mon);
+		}
+
 		if (ev->atom == netatom[NetWMWindowType])
 			updatewindowtype(c);
 	}
