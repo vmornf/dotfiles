@@ -249,6 +249,8 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_a,     spawn,               SHCMD("picom-trans -c -5")},
 	{ MODKEY|ControlMask,             XK_a,     spawn,               SHCMD("picom-trans -c +5")},
 	{ MODKEY,						XK_section,			spawn,				SHCMD("~/.local/bin/my_scripts/loadEww.sh") },
+	{ MODKEY|ShiftMask,						XK_section,			spawn,				SHCMD(TERMINAL " -e ranger ~/") },
+	{ MODKEY|ShiftMask,						XK_section,			spawn,				SHCMD(TERMINAL " -e ranger ~/") },
 	
 	{ MODKEY,			XK_Left,	focusmon,	{.i = -1 } },
 	{ MODKEY|ShiftMask,		XK_Left,	tagmon,		{.i = -1 } },

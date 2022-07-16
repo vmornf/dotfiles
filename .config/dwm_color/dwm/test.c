@@ -32,5 +32,11 @@ int main()
 	/* printf("Digits = %d\n", digits); */
 	/* printf("Spec chars = %d", specialchars); */
 
+	// Print to file:
+	/* FILE *fptwo; */
+	/* fptwo = fopen("/home/jonas/cnames.txt", "a"); */
+	/* fprintf(fptwo, c->name); */
+	/* fclose(fptwo); */
+
 	return 0;
 }
