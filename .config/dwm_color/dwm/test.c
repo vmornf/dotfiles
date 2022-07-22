@@ -38,5 +38,13 @@ int main()
 	/* fprintf(fptwo, c->name); */
 	/* fclose(fptwo); */
 
+	// Testing...
+
+	char test[256] = "hello my mate fan";
+	char clientname[256];
+	memcpy(clientname, test, 10);
+	printf("%s", clientname);
+	/* if (n == 1 && strcmp(clientname, "Mozilla Fi") == 0) { */
+
 	return 0;
 }

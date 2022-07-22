@@ -2535,11 +2535,11 @@ view(const Arg *arg)
 		return;
 
 	/* if ((arg->ui & TAGMASK) == ( 1 << 8)){ */
-	if ((arg->ui & TAGMASK) == (000000001)){
-		enablegaps = 0;
-	}else{
-		enablegaps = 1;
-	}
+	/* if ((arg->ui & TAGMASK) == (000000001)){ */
+	/* 	enablegaps = 0; */
+	/* }else{ */
+	/* 	enablegaps = 1; */
+	/* } */
 
 	selmon->seltags ^= 1; /* toggle sel tagset */
 	if (arg->ui & TAGMASK)
@@ -2810,7 +2810,7 @@ main(int argc, char *argv[])
 	scan();
 	runAutostart();
 	/* runautostart(); */
-	enablegaps = 0;
+	enablegaps = 1;
 	arrange(selmon);
 	run();
 	if(restart) execvp(argv[0], argv);
