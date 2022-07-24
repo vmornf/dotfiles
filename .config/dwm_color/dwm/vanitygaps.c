@@ -146,9 +146,9 @@ getgaps(Monitor *m, int *oh, int *ov, int *ih, int *iv, unsigned int *nc)
 	oe = ie = enablegaps;
 	Client *c;
 
-	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
+	for (n = 0, c = nexttiled(m->cl->clients, m); c; c = nexttiled(c->next, m), n++);
 	/* if (smartgaps && n == 1) { */
-	if (n == 1 && strstr(nexttiled(m->clients)->name, "Mozilla Firefox") != NULL && !browsergaps) {
+	if (n == 1 && strstr(nexttiled(m->cl->clients, m)->name, "Mozilla Firefox") != NULL && !browsergaps) {
 		oe = 0; // outer gaps disabled when only one client
 	}
 
@@ -172,11 +172,11 @@ getfacts(Monitor *m, int msize, int ssize, float *mf, float *sf, int *mr, int *s
 	int mtotal = 0, stotal = 0;
 	Client *c;
 
-	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
+	for (n = 0, c = nexttiled(m->cl->clients, m); c; c = nexttiled(c->next, m), n++);
 	mfacts = MIN(n, m->nmaster);
 	sfacts = n - m->nmaster;
 
-	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++)
+	for (n = 0, c = nexttiled(m->cl->clients, m); c; c = nexttiled(c->next, m), n++)
 		if (n < m->nmaster)
 			mtotal += msize / mfacts;
 		else
@@ -228,7 +228,7 @@ bstack(Monitor *m)
 
 	getfacts(m, mw, sw, &mfacts, &sfacts, &mrest, &srest);
 
-	for (i = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++) {
+	for (i = 0, c = nexttiled(m->cl->clients, m); c; c = nexttiled(c->next, m), i++) {
 		if (i < m->nmaster) {
 			resize(c, mx, my, (mw / mfacts) + (i < mrest ? 1 : 0) - (2*c->bw), mh - (2*c->bw), 0);
 			mx += WIDTH(c) + iv;
@@ -290,7 +290,7 @@ centeredmaster(Monitor *m)
 	}
 
 	/* calculate facts */
-	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++) {
+	for (n = 0, c = nexttiled(m->cl->clients, m); c; c = nexttiled(c->next, m), n++) {
 		if (!m->nmaster || n < m->nmaster)
 			mfacts += 1;
 		else if ((n - m->nmaster) % 2)
@@ -299,7 +299,7 @@ centeredmaster(Monitor *m)
 			rfacts += 1; // total factor of right hand stack area
 	}
 
-	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++)
+	for (n = 0, c = nexttiled(m->cl->clients, m); c; c = nexttiled(c->next, m), n++)
 		if (!m->nmaster || n < m->nmaster)
 			mtotal += mh / mfacts;
 		else if ((n - m->nmaster) % 2)
@@ -311,7 +311,7 @@ centeredmaster(Monitor *m)
 	lrest = lh - ltotal;
 	rrest = rh - rtotal;
 
-	for (i = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++) {
+	for (i = 0, c = nexttiled(m->cl->clients, m); c; c = nexttiled(c->next, m), i++) {
 		if (!m->nmaster || i < m->nmaster) {
 			/* nmaster clients are stacked vertically, in the center of the screen */
 			resize(c, mx, my, mw - (2*c->bw), (mh / mfacts) + (i < mrest ? 1 : 0) - (2*c->bw), 0);
@@ -372,7 +372,7 @@ centeredfloatingmaster(Monitor *m)
 
 	getfacts(m, mw, sw, &mfacts, &sfacts, &mrest, &srest);
 
-	for (i = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
+	for (i = 0, c = nexttiled(m->cl->clients, m); c; c = nexttiled(c->next, m), i++)
 		if (i < m->nmaster) {
 			/* nmaster clients are stacked horizontally, in the center of the screen */
 			resize(c, mx, my, (mw / mfacts) + (i < mrest ? 1 : 0) - (2*c->bw), mh - (2*c->bw), 0);
@@ -422,7 +422,7 @@ deck(Monitor *m)
 	if (n - m->nmaster > 0) /* override layout symbol */
 		snprintf(m->ltsymbol, sizeof m->ltsymbol, "D %d", n - m->nmaster);
 
-	for (i = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
+	for (i = 0, c = nexttiled(m->cl->clients, m); c; c = nexttiled(c->next, m), i++)
 		if (i < m->nmaster) {
 			resize(c, mx, my, mw - (2*c->bw), (mh / mfacts) + (i < mrest ? 1 : 0) - (2*c->bw), 0);
 			my += HEIGHT(c) + ih;
@@ -454,7 +454,7 @@ fibonacci(Monitor *m, int s)
 	nw = m->ww - 2*ov;
 	nh = m->wh - 2*oh;
 
-	for (i = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next)) {
+	for (i = 0, c = nexttiled(m->cl->clients, m); c; c = nexttiled(c->next, m)) {
 		if ((i % 2 && nh / 2 > 2*c->bw)
 		   || (!(i % 2) && nw / 2 > 2*c->bw)) {
 			if (i < n - 1) {
@@ -545,7 +545,7 @@ tile(Monitor *m)
 
 	getfacts(m, mh, sh, &mfacts, &sfacts, &mrest, &srest);
 
-	for (i = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
+	for (i = 0, c = nexttiled(m->cl->clients, m); c; c = nexttiled(c->next, m), i++)
 		if (i < m->nmaster) {
 			resize(c, mx, my, mw - (2*c->bw), (mh / mfacts) + (i < mrest ? 1 : 0) - (2*c->bw), 0);
 			my += HEIGHT(c) + ih;

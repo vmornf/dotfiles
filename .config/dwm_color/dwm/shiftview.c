@@ -10,7 +10,7 @@ shiftview(const Arg *arg)
 	Client *c;
 	unsigned int tagmask = 0;
 
-	for (c = selmon->clients; c; c = c->next)
+	for (c = selmon->cl->clients; c; c = c->next)
 		if (!(c->tags & SPTAGMASK))
 			tagmask = tagmask | c->tags;
 
@@ -49,7 +49,7 @@ shifttag(const Arg *arg)
 			nextseltags = curseltags >> (- i) | (curseltags << (LENGTH(tags) + i));
 
                 // Check if tag is visible
-		for (c = selmon->clients; c && !visible; c = c->next)
+		for (c = selmon->cl->clients; c && !visible; c = c->next)
 			if (nextseltags & c->tags) {
 				visible = 1;
 				break;
