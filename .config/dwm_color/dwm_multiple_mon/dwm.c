@@ -237,6 +237,7 @@ static void runAutostart(void);
 static void scan(void);
 static int sendevent(Client *c, Atom proto);
 static void sendmon(Client *c, Monitor *m);
+static void sendmonview(Client *c, Monitor *m);
 static void setclientstate(Client *c, long state);
 static void setfocus(Client *c);
 static void setfullscreen(Client *c, int fullscreen);
@@ -255,8 +256,13 @@ static void sigterm(int unused);
 static void spawn(const Arg *arg);
 static int stackpos(const Arg *arg);
 static void tag(const Arg *arg);
+static void tagnewmon(const Arg *arg);
+static void tagnewmonnoview(const Arg *arg, Monitor *m);
 static void noviewontag(const Arg *arg);
 static void tagmon(const Arg *arg);
+static void tagmonview(const Arg *arg);
+static void tagnthmon(const Arg *arg);
+static void tagnthmonview(const Arg *arg);
 static void togglebar(const Arg *arg);
 static void togglefloating(const Arg *arg);
 static void togglescratch(const Arg *arg);
@@ -1811,6 +1817,25 @@ sendmon(Client *c, Monitor *m)
 }
 
 void
+sendmonview(Client *c, Monitor *m)
+{
+	if (c->mon == m)
+		return;
+	unfocus(c, 1);
+	detach(c);
+	detachstack(c);
+	arrange(c->mon);
+	c->mon = m;
+	c->tags = m->tagset[m->seltags]; /* assign tags of target monitor */
+	attach(c);
+	attachstack(c);
+	XWarpPointer(dpy, None, m->barwin, 0, 0, 0, 0, m->mw / 2, m->mh / 2);
+	arrange(m);
+	focus(c);
+	restack(m);
+}
+
+void
 setclientstate(Client *c, long state)
 {
 	long data[] = { state, None };
@@ -2113,6 +2138,16 @@ spawn(const Arg *arg)
 void
 tag(const Arg *arg)
 {
+	if ((arg->ui & 101010101) == 0  && selmon == mons) {
+		tagnthmonview(&((Arg) { .i = 1 }));
+		tagnewmon(arg);
+		return;
+	}else{
+		tagnthmonview(&((Arg) { .i = 0 }));
+		tagnewmon(arg);
+		return;
+	}
+
 	if (selmon->sel && arg->ui & TAGMASK) {
 		selmon->sel->tags = arg->ui & TAGMASK;
 		focus(NULL);
@@ -2122,8 +2157,39 @@ tag(const Arg *arg)
 }
 
 void
+tagnewmon(const Arg *arg)
+{
+	if (selmon->sel && arg->ui & TAGMASK) {
+		selmon->sel->tags = arg->ui & TAGMASK;
+		focus(NULL);
+		arrange(selmon);
+		view(arg);
+	}
+}
+
+void
+tagnewmonnoview(const Arg *arg, Monitor *m)
+{
+	if (m->sel && arg->ui & TAGMASK) {
+		m->sel->tags = arg->ui & TAGMASK;
+		focus(NULL);
+		arrange(m);
+	}
+}
+
+void
 noviewontag(const Arg *arg)
 {
+	if ((arg->ui & 101010101) == 0  && selmon == mons) {
+		tagnthmon(&((Arg) { .i = 1 }));
+		tagnewmonnoview(arg, numtomon(1));
+		return;
+	}else{
+		tagnthmon(&((Arg) { .i = 0 }));
+		tagnewmonnoview(arg, numtomon(0));
+		return;
+	}
+
 	if (selmon->sel && arg->ui & TAGMASK) {
 		selmon->sel->tags = arg->ui & TAGMASK;
 		focus(NULL);
@@ -2137,6 +2203,30 @@ tagmon(const Arg *arg)
 	if (!selmon->sel || !mons->next)
 		return;
 	sendmon(selmon->sel, dirtomon(arg->i));
+}
+
+void
+tagmonview(const Arg *arg)
+{
+	if (!selmon->sel || !mons->next)
+		return;
+	sendmonview(selmon->sel, dirtomon(arg->i));
+}
+
+void
+tagnthmon(const Arg *arg)
+{
+	if (!selmon->sel || !mons->next)
+		return;
+	sendmon(selmon->sel, numtomon(arg->i));
+}
+
+void
+tagnthmonview(const Arg *arg)
+{
+	if (!selmon->sel || !mons->next)
+		return;
+	sendmonview(selmon->sel, numtomon(arg->i));
 }
 
 void
