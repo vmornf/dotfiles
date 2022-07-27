@@ -801,7 +801,7 @@ createmon(void)
 
 	m = ecalloc(1, sizeof(Monitor));
 	if (mons){
-		m->tagset[1] = m->tagset[1] = 1;
+		m->tagset[0] = m->tagset[1] = 2;
 	}else{
 		m->tagset[0] = m->tagset[1] = 1;
 	}
