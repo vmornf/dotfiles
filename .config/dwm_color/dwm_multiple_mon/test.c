@@ -40,11 +40,13 @@ int main()
 
 	// Testing...
 
-	char test[256] = "hello my mate fan";
-	char clientname[256];
-	memcpy(clientname, test, 10);
-	printf("%s", clientname);
-	/* if (n == 1 && strcmp(clientname, "Mozilla Fi") == 0) { */
+	/* char test[256] = "hello my mate fan"; */
+	/* char clientname[256]; */
+	/* memcpy(clientname, test, 10); */
+	/* printf("%s", clientname); */
+
+	// 
+
 
 	return 0;
 }

@@ -2575,24 +2575,47 @@ view(const Arg *arg)
 	/* 	return; */
 	/* } */
 
-	if ((arg->ui & TAGMASK) == (1 << 0)){
+	// GENIUS 101010101
+	if ((arg->ui & 101010101) == 0 ) {
+		focusnthmon(&((Arg) { .i = 1 }));
+	}else{
 		focusnthmon(&((Arg) { .i = 0 }));
 	}
-	else if ((arg->ui & TAGMASK) == (1 << 1)){
-		focusnthmon(&((Arg) { .i = 1 }));
-	}
-	else if ((arg->ui & TAGMASK) == (1 << 2)){
-		focusnthmon(&((Arg) { .i = 0 }));
-	}
-	else if ((arg->ui & TAGMASK) == (1 << 3)){
-		focusnthmon(&((Arg) { .i = 1 }));
-	}
-	else if ((arg->ui & TAGMASK) == (1 << 4)){
-		focusnthmon(&((Arg) { .i = 0 }));
-	}
-	else if ((arg->ui & TAGMASK) == (1 << 5)){
-		focusnthmon(&((Arg) { .i = 1 }));
-	}
+
+
+	/* switch(arg->ui & TAGMASK){ */
+	/* 	case (1 << 0): */
+	/* 		focusnthmon(&((Arg) { .i = 0 })); */
+	/* 	case (1 << 1): */
+	/* 		focusnthmon(&((Arg) { .i = 1 })); */
+	/* 	case (1 << 2): */
+	/* 		focusnthmon(&((Arg) { .i = 0 })); */
+	/* 	case (1 << 3): */
+	/* 		focusnthmon(&((Arg) { .i = 1 })); */
+	/* 	case (1 << 4): */
+	/* 		focusnthmon(&((Arg) { .i = 0 })); */
+	/* 	case (1 << 5): */
+	/* 		focusnthmon(&((Arg) { .i = 1 })); */
+	/* } */
+
+	/* if ((arg->ui & TAGMASK) == (1 << 0)){ */
+	/* 	focusnthmon(&((Arg) { .i = 0 })); */
+	/* } */
+	/* else if ((arg->ui & TAGMASK) == (1 << 1)){ */
+	/* 	focusnthmon(&((Arg) { .i = 1 })); */
+	/* } */
+	/* else if ((arg->ui & TAGMASK) == (1 << 2)){ */
+	/* 	focusnthmon(&((Arg) { .i = 0 })); */
+	/* } */
+	/* else if ((arg->ui & TAGMASK) == (1 << 3)){ */
+	/* 	focusnthmon(&((Arg) { .i = 1 })); */
+	/* } */
+	/* else if ((arg->ui & TAGMASK) == (1 << 4)){ */
+	/* 	focusnthmon(&((Arg) { .i = 0 })); */
+	/* } */
+	/* else if ((arg->ui & TAGMASK) == (1 << 5)){ */
+	/* 	focusnthmon(&((Arg) { .i = 1 })); */
+	/* } */
 
 
 	selmon->seltags ^= 1; /* toggle sel tagset */
