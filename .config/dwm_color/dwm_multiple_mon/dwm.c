@@ -238,7 +238,6 @@ static void scan(void);
 static int sendevent(Client *c, Atom proto);
 static void sendmon(Client *c, Monitor *m);
 static void sendmonview(Client *c, Monitor *m);
-static void tagnextmon(const Arg *arg);
 static void setclientstate(Client *c, long state);
 static void setfocus(Client *c);
 static void setfullscreen(Client *c, int fullscreen);
@@ -261,6 +260,7 @@ static void tag(const Arg *arg);
 static void tagview(const Arg *arg);
 static void tagmon(const Arg *arg);
 static void tagmonview(const Arg *arg);
+static void tagnextmon(const Arg *arg);
 static void tagnthmon(const Arg *arg);
 static void tagnthmonview(const Arg *arg);
 static void togglebar(const Arg *arg);
@@ -2227,7 +2227,7 @@ tagnthmon(const Arg *arg)
 {
 	if (!selmon->sel || !mons->next)
 		return;
-	sendmonnewtag(selmon->sel, numtomon(arg->i), arg);
+	sendmon(selmon->sel, numtomon(arg->i));
 }
 
 void
