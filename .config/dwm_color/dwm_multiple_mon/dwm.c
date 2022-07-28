@@ -2155,7 +2155,7 @@ tag(const Arg *arg)
 			focus(NULL);
 			arrange(selmon);
 		}
-	}else if (((arg->ui & 101010101) > 0  && selmon == mons)){
+	} else if (((arg->ui & 101010101) > 0  && selmon == mons)){
 		if (selmon->sel && arg->ui & TAGMASK) {
 			selmon->sel->tags = arg->ui & TAGMASK;
 			focus(NULL);
@@ -2173,7 +2173,10 @@ tagview(const Arg *arg)
 		tagnthmonview(&((Arg) { .i = 1 }));
 		tagnewmon(arg);
 		return;
-	}else if (((arg->ui & 101010101) > 0  && selmon != mons)){
+	} else if (((arg->ui & TAGMASK) == (1 << 5) && selmon == mons)){
+		tagnthmonview(&((Arg) { .i = 1 }));
+		tagnewmon(arg);
+	} else if (((arg->ui & 101010101) > 0  && selmon != mons)){
 		tagnthmonview(&((Arg) { .i = 0 }));
 		tagnewmon(arg);
 		return;
@@ -2665,19 +2668,20 @@ updatewmhints(Client *c)
 void
 view(const Arg *arg)
 {
-
 	if ((arg->ui & TAGMASK) == selmon->tagset[selmon->seltags])
  		return;
-
 	/* if ((arg->ui & TAGMASK) == selmon->tagset[selmon->seltags]) { */
 	/* 	view(&((Arg) { .ui = 0 })); */
 	/* 	return; */
 	/* } */
 
 	// GENIUS 101010101
-	if ((arg->ui & 101010101) == 0 ) {
+	if ((arg->ui & 10101) == 0 ) {
 		focusnthmon(&((Arg) { .i = 1 }));
-	}else{
+	}else if ((arg->ui & TAGMASK) == (1 << 5)){
+		focusnthmon(&((Arg) { .i = 1 }));
+	}
+	else{
 		focusnthmon(&((Arg) { .i = 0 }));
 	}
 
