@@ -238,6 +238,7 @@ static void scan(void);
 static int sendevent(Client *c, Atom proto);
 static void sendmon(Client *c, Monitor *m);
 static void sendmonview(Client *c, Monitor *m);
+static void sendmonnewtag(Client *c, Monitor *m, const Arg *arg);
 static void tagnextmon(const Arg *arg);
 static void setclientstate(Client *c, long state);
 static void setfocus(Client *c);
@@ -1817,6 +1818,40 @@ sendmon(Client *c, Monitor *m)
 }
 
 void
+sendmonnewtag(Client *c, Monitor *m, const Arg *arg)
+{
+	if (c->mon == m)
+		return;
+	unfocus(c, 1);
+	detach(c);
+	detachstack(c);
+	c->mon = m;
+	attach(c);
+	attachstack(c);
+	focus(NULL);
+	arrange(NULL);
+}
+
+void
+tagnextmon(const Arg *arg)
+{
+	Client *sel;
+	Monitor *newmon;
+
+	if (!selmon->sel || !mons->next)
+		return;
+	sel = selmon->sel;
+	newmon = dirtomon(1);
+	sendmon(sel, newmon);
+	if (sel && arg->ui & TAGMASK) {
+		sel->tags = arg->ui & TAGMASK;
+		focus(NULL);
+		arrange(newmon);
+	}
+}
+
+
+void
 sendmonview(Client *c, Monitor *m)
 {
 	if (c->mon == m)
@@ -2149,20 +2184,18 @@ tagnewmon(const Arg *arg)
 void
 tag(const Arg *arg)
 {
-	if ((arg->ui & 101010101) == 0  && selmon != mons) {
-		if (selmon->sel && arg->ui & TAGMASK) {
-			selmon->sel->tags = arg->ui & TAGMASK;
-			focus(NULL);
-			arrange(selmon);
-		}
-	}else if (((arg->ui & 101010101) > 0  && selmon == mons)){
-		if (selmon->sel && arg->ui & TAGMASK) {
-			selmon->sel->tags = arg->ui & TAGMASK;
-			focus(NULL);
-			arrange(selmon);
-		}
-	}else{
-		tagnextmon(arg);
+	if ((arg->ui & 101010101) == 0  && selmon == mons) {
+		tagnthmon(&((Arg) { .i = 1 }));
+		/* return; */
+	}else if (((arg->ui & 101010101) > 0  && selmon != mons)){
+		tagnthmon(&((Arg) { .i = 0 }));
+		/* return; */
+	}
+
+	if (selmon->sel && arg->ui & TAGMASK) {
+		selmon->sel->tags = arg->ui & TAGMASK;
+		focus(NULL);
+		arrange(selmon);
 	}
 }
 
@@ -2194,25 +2227,6 @@ tagmon(const Arg *arg)
 		return;
 	sendmon(selmon->sel, dirtomon(arg->i));
 }
-
-void
-tagnextmon(const Arg *arg)
-{
-	Client *sel;
-	Monitor *newmon;
-
-	if (!selmon->sel || !mons->next)
-		return;
-	sel = selmon->sel;
-	newmon = dirtomon(1);
-	sendmon(sel, newmon);
-	if (sel && arg->ui & TAGMASK) {
-		sel->tags = arg->ui & TAGMASK;
-		focus(NULL);
-		arrange(newmon);
-	}
-}
-
 
 void
 tagmonview(const Arg *arg)
