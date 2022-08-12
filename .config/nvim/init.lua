@@ -92,7 +92,6 @@ g.mapleader = ' '
 g.maplocalleader = ' '
 
 -- General settings
---
 vim.opt.wrap = false -- No Wrap lines
 vim.opt.backspace = { 'start', 'eol', 'indent' }
 vim.opt.path:append { '**' } -- Finding files - Search down into subfolders
@@ -131,10 +130,58 @@ let NERDTreeShowHidden=1
 " Disable tab key for vimwiki (enables autocomplete via tabbing)
 let g:vimwiki_key_mappings = { 'table_mappings': 0 }
 ]])
---
---
 
-require('lualine').setup()
+local function getWords()
+  if vim.bo.filetype == "md" or vim.bo.filetype == "text" or vim.bo.filetype == "txt" or vim.bo.filetype == "vtxt" or vim.bo.filetype == "markdown" then
+    return tostring(vim.fn.wordcount().words)
+  else
+    return ""
+  end
+end
+
+require('lualine').setup {
+  options = {
+    icons_enabled = true,
+    theme = 'gruvbox',
+    refresh = {
+      statusline = 1000,
+      tabline = 1000,
+      winbar = 1000,
+    }
+  },
+  sections = {
+    lualine_a = {'mode'},
+    lualine_b = {'branch', 'diff', 'diagnostics'},
+    lualine_c = {'filename'},
+    lualine_x = {getWords, 'encoding', 'fileformat', 'filetype'},
+    lualine_y = {'progress'},
+    lualine_z = {'location'}
+  },
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = {'filename'},
+    lualine_x = {'location'},
+    lualine_y = {},
+    lualine_z = {}
+  },
+  tabline = {},
+  winbar = {},
+  inactive_winbar = {},
+  extensions = {}
+}
+
+local barhidden = false
+
+local function togglebar()
+    if barhidden then
+        require('lualine').hide({unhide = true})
+        barhidden = false
+    else
+        require('lualine').hide()
+        barhidden = true;
+    end
+end
 
 -- local ok, _ = pcall(vim.cmd, 'colorscheme base16-gruvbox-dark-medium')
 -- vim.g.gruvbox_contrast_dark = 'hard'
@@ -168,6 +215,7 @@ map('i', '<S-Tab>', '<BS>')
 map('i', '<S-Insert>', '<Esc><MiddleMouse>A')
 map('n', '<S-Insert>', '<MiddleMouse>')
 
+map('n', '<leader>b', togglebar) -- Toggle lualine
 map('n', '<M-q>', ':q<CR>') -- Quit neovim
 map('n', '<M-z>', ':noh<CR>')
 -- map('n', '<M-x>', ':call CompileRun()<CR>')
@@ -208,17 +256,17 @@ map('n', '<M-u>', ':resize +2<CR>')
 map('n', '<M-i>', ':resize -2<CR>')
 map('n', '<M-o>', ':vertical resize +2<CR>')
 map('n', '<M-y>', ':vertical resize -2<CR>')
-map('n', '<M-h>', '<use>WinMoveLeft')
-map('n', '<M-j>', '<use>WinMoveDown')
-map('n', '<M-k>', '<use>WinMoveUp')
-map('n', '<M-l>', '<use>WinMoveRight')
+map('n', '<M-h>', '<Plug>WinMoveLeft')
+map('n', '<M-j>', '<Plug>WinMoveDown')
+map('n', '<M-k>', '<Plug>WinMoveUp')
+map('n', '<M-l>', '<Plug>WinMoveRight')
 
 -- Moving text and indentation
 map('x', 'K', ":move '<-2<CR>gv-gv")
 map('x', 'J', ":move '>+1<CR>gv-gv")
 map('n', '<leader>j', ':join<CR>')
 map('n', '<leader>J', ':join!<CR>')
-map('n', '<leader>z', '<use>Zoom')
+map('n', '<leader>z', '<Plug>Zoom')
 
 -- Indentation
 map('v', '<leader><', ':le<CR>')
@@ -263,6 +311,7 @@ map('n', '<leader>wu', ':%s/\\%u200b//g<cr>') -- Remove all extra unicode chars
 map('n', '<leader>wb', ':%s/[[:cntrl:]]//g<cr>') -- Remove all hidden characters
 map('n', '<leader>r', 'gqG<C-o>zz') -- Format rest of the text with vim formatting, go back and center screen
 map('v', '<leader>gu', ':s/\\<./\\u&/g<cr>') -- Capitalize first letter of each word on visually selected line
+
 
  -- Setup nvim-cmp.
   local cmp = require'cmp'
