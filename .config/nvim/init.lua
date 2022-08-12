@@ -1,11 +1,16 @@
+lspconfig = require'lspconfig'
 require'lspconfig'.pyright.setup{}
+-- require'lspconfig'.sumneko_lua.setup{}
+require'lspconfig'.clangd.setup{}
+require'lspconfig'.jdtls.setup{}
+
 local g   = vim.g
 local o   = vim.o
 local opt = vim.opt
 local A   = vim.api
 
 -- cmd('syntax on')
--- vim.api.nvim_command('filetype plugin indent on')
+-- vim.api.nvim_command('filetype usein indent on')
 
 o.termguicolors = true
 -- o.background = 'dark'
@@ -53,7 +58,7 @@ o.ignorecase = true
 -- Undo and backup options
 o.backup = false
 o.writebackup = false
-o.undofile = true
+o.undofile = false
 o.swapfile = false
 -- o.backupdir = '/tmp/'
 -- o.directory = '/tmp/'
@@ -152,6 +157,7 @@ map('i', '<C-A>', '<ESC>I')
 map('i', '<C-v>', '<Esc>"+p')
 map('i', '<C-a>', '<Esc>gg"yG') -- Copy everything from file into clipboard
 map('i', '<C-BS>', '<C-W>a') -- Copy everything from file into clipboard
+map('i', '<S-Tab>', '<BS>')
 -- Undo break points
 -- map('i', ',', ',<c-g>u')
 -- map('i', '.', '.<c-g>u')
@@ -202,17 +208,17 @@ map('n', '<M-u>', ':resize +2<CR>')
 map('n', '<M-i>', ':resize -2<CR>')
 map('n', '<M-o>', ':vertical resize +2<CR>')
 map('n', '<M-y>', ':vertical resize -2<CR>')
-map('n', '<M-h>', '<Plug>WinMoveLeft')
-map('n', '<M-j>', '<Plug>WinMoveDown')
-map('n', '<M-k>', '<Plug>WinMoveUp')
-map('n', '<M-l>', '<Plug>WinMoveRight')
+map('n', '<M-h>', '<use>WinMoveLeft')
+map('n', '<M-j>', '<use>WinMoveDown')
+map('n', '<M-k>', '<use>WinMoveUp')
+map('n', '<M-l>', '<use>WinMoveRight')
 
 -- Moving text and indentation
 map('x', 'K', ":move '<-2<CR>gv-gv")
 map('x', 'J', ":move '>+1<CR>gv-gv")
 map('n', '<leader>j', ':join<CR>')
 map('n', '<leader>J', ':join!<CR>')
-map('n', '<leader>z', '<Plug>Zoom')
+map('n', '<leader>z', '<use>Zoom')
 
 -- Indentation
 map('v', '<leader><', ':le<CR>')
@@ -258,14 +264,95 @@ map('n', '<leader>wb', ':%s/[[:cntrl:]]//g<cr>') -- Remove all hidden characters
 map('n', '<leader>r', 'gqG<C-o>zz') -- Format rest of the text with vim formatting, go back and center screen
 map('v', '<leader>gu', ':s/\\<./\\u&/g<cr>') -- Capitalize first letter of each word on visually selected line
 
--- Use tab and s-tab to navigate the completion list
-vim.keymap.set('i', '<Tab>', function()
-    return vim.fn.pumvisible() == 1 and '<C-N>' or '<Tab>'
-end, {expr = true})
+ -- Setup nvim-cmp.
+  local cmp = require'cmp'
 
-vim.keymap.set('i', '<S-Tab>', function()
-    return vim.fn.pumvisible() == 1 and '<C-P>' or '<S-Tab>'
-end, {expr = true})
+  cmp.setup({
+    snippet = {
+      -- REQUIRED - you must specify a snippet engine
+      expand = function(args)
+        vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+        -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+        -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+        -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+      end,
+    },
+    window = {
+      -- completion = cmp.config.window.bordered(),
+      -- documentation = cmp.config.window.bordered(),
+    },
+    mapping = cmp.mapping.preset.insert({
+      ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+      ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-Space>'] = cmp.mapping.complete(),
+      ['<C-e>'] = cmp.mapping.abort(),
+      ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+  -- Use Tab and Shift-Tab to browse through the suggestions.
+    ["<Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      -- elseif vim.fn["vsnip#available"](1) == 1 then
+        -- feedkey("<Plug>(vsnip-expand-or-jump)", "")
+      -- elseif has_words_before() then
+        -- cmp.complete()
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
+    ["<S-Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_prev_item()
+      -- elseif vim.fn["vsnip#jumpable"](-1) == 1 then
+        -- feedkey("<Plug>(vsnip-jump-prev)", "")
+      else
+        fallback()
+      end
+    end, { "i", "s" }),
+  }),
+    sources = cmp.config.sources({
+      { name = 'nvim_lsp' },
+      { name = 'vsnip' }, -- For vsnip users.
+      -- { name = 'luasnip' }, -- For luasnip users.
+      -- { name = 'ultisnips' }, -- For ultisnips users.
+      -- { name = 'snippy' }, -- For snippy users.
+    }, {
+      { name = 'buffer' },
+    })
+  })
+
+  -- Set configuration for specific filetype.
+  cmp.setup.filetype('gitcommit', {
+    sources = cmp.config.sources({
+      { name = 'cmp_git' }, -- You can specify the `cmp_git` source if you were installed it.
+    }, {
+      { name = 'buffer' },
+    })
+  })
+
+  -- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline('/', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = {
+      { name = 'buffer' }
+    }
+  })
+
+  -- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+  cmp.setup.cmdline(':', {
+    mapping = cmp.mapping.preset.cmdline(),
+    sources = cmp.config.sources({
+      -- { name = 'path' }
+    }, {
+      { name = 'cmdline' }
+    })
+  })
+
+  -- Setup lspconfig.
+  local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+  -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
+  -- require('lspconfig')['<YOUR_LSP_SERVER>'].setup {
+    -- capabilities = capabilities
+  -- }
 
 
 -- vim.api.nvim_command('autocmd BufEnter *.tex :set wrap linebreak nolist spell')
@@ -293,10 +380,9 @@ autocmd FileType sql inoremap vie<Tab> create view x as<Enter>select <Esc>/x<Ent
 autocmd FileType vtxt,vimwiki,wiki,text inoremap line<Tab> ----------------------------------------------------------------------------------<Enter>
 autocmd FileType vtxt,vimwiki,wiki,text inoremap date<Tab> <-- <C-R>=strftime("%Y-%m-%d %a")<CR><Esc>A -->
 autocmd FileType c inoremap for<Tab> for(int i = 0; i < val; i++){<Enter><Enter>}<Esc>?val<Enter>ciw
-
 ]])
 
--- PLUGINS
+-- useINS
 --
 -- Only required if you have packer configured as `opt`
 -- vim.cmd [[packadd packer.nvim]]
@@ -321,6 +407,7 @@ return require('packer').startup(function()
   use 'vimwiki/vimwiki'
   use 'tpope/vim-surround'
   use 'junegunn/fzf'
+  use 'tpope/vim-commentary'
   -- use 'junegunn/goyo.vim'
   -- use 'junegunn/limelight.vim'
   use 'junegunn/vim-emoji'
@@ -329,8 +416,13 @@ return require('packer').startup(function()
   -- Syntax Highlighting and Colors --
   use 'vim-python/python-syntax'
   use 'ap/vim-css-color'
-  use 'vim-syntastic/syntastic'
+  -- use 'vim-syntastic/syntastic'
   use 'neovim/nvim-lspconfig' -- Configurations for Nvim LSP
+  use 'hrsh7th/cmp-nvim-lsp'
+  use 'hrsh7th/cmp-buffer'
+  use 'hrsh7th/cmp-path'
+  use 'hrsh7th/cmp-cmdline'
+  use 'hrsh7th/nvim-cmp'
   -- use 'mechatroner/rainbow_csv'
   -- use 'PotatoesMaster/i3-vim-syntax'
   -- use 'kovetskiy/sxhkd-vim'
