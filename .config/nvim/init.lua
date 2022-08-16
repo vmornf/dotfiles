@@ -100,7 +100,7 @@ vim.scriptencoding = 'utf-8'
 vim.opt.encoding = 'utf-8'
 vim.opt.fileencoding = 'utf-8'
 -- vim.cmd("autocmd!")
--- vim.opt.cmdheight = 1
+vim.opt.cmdheight = 1
 --
 vim.cmd([[
 set runtimepath+=~/.vim
@@ -307,11 +307,10 @@ map('n', '<C-c>', 'y')
 
 map('n', '<leader>s', "/\\s\\+$/<CR>") -- Show extra whitespace
 map('n', '<leader>ws', ':%s/\\s\\+$<CR>') -- Remove all extra whitespace
-map('n', '<leader>wu', ':%s/\\%u200b//g<cr>') -- Remove all extra unicode chars
-map('n', '<leader>wb', ':%s/[[:cntrl:]]//g<cr>') -- Remove all hidden characters
+map('n', '<leader>wu', ':%s/\\%u200b//g<CR>') -- Remove all extra unicode chars
+map('n', '<leader>wb', ':%s/[[:cntrl:]]//g<CR>') -- Remove all hidden characters
 map('n', '<leader>r', 'gqG<C-o>zz') -- Format rest of the text with vim formatting, go back and center screen
-map('v', '<leader>gu', ':s/\\<./\\u&/g<cr>') -- Capitalize first letter of each word on visually selected line
-
+map('v', '<leader>gu', ':s/\\<./\\u&/g<CR>:noh<CR>') -- Capitalize first letter of each word on visually selected line
 
  -- Setup nvim-cmp.
   local cmp = require'cmp'
@@ -429,6 +428,44 @@ autocmd FileType sql inoremap vie<Tab> create view x as<Enter>select <Esc>/x<Ent
 autocmd FileType vtxt,vimwiki,wiki,text inoremap line<Tab> ----------------------------------------------------------------------------------<Enter>
 autocmd FileType vtxt,vimwiki,wiki,text inoremap date<Tab> <-- <C-R>=strftime("%Y-%m-%d %a")<CR><Esc>A -->
 autocmd FileType c inoremap for<Tab> for(int i = 0; i < val; i++){<Enter><Enter>}<Esc>?val<Enter>ciw
+
+func! CompileRun()
+    exec "w"
+    if &filetype == 'c'
+        exec "!gcc % && ./a.out"
+    elseif &filetype == 'cpp'
+        "exec "!g++ % -o %< -lbgi -lgdi32 -lcomdlg32 -luuid -loleaut32 -lole32"
+        exec "!g++ -pthread % -o %<"
+        exec "!./%:r"
+    elseif &filetype == 'java'
+        "exec "!javac %"
+        "exec "!java -cp %:p:h %:t:r"
+        exec "!java %"
+    elseif &filetype == 'sh'
+        exec "!time bash %"
+    elseif &filetype == 'python'
+        exec "!python3 %"
+    elseif &filetype == 'html'
+        exec "!firefox % &"
+    elseif &filetype == 'javascript'
+        exec "!node %"
+    elseif &filetype == 'jsx'
+        exec "!node %"
+    elseif &filetype == 'typescript'
+        exec "!node %"
+    elseif &filetype == 'go'
+        exec "!go build %<"
+        exec "!time go run %"
+    elseif &filetype == 'mkd'
+        exec "!~/.vim/markdown.pl % > %.html &"
+        exec "!firefox %.html &"
+    elseif &filetype == 'cs'
+        "exec "!csc %"
+        "exec "!%:r.exe"
+        exec "!mcs % && mono ./%:t:r.exe"
+    endif
+endfunc
+map <M-x> :call CompileRun()<CR>
 ]])
 
 -- useINS
