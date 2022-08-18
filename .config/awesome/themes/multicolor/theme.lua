@@ -16,8 +16,8 @@ local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 local theme                                     = {}
 theme.confdir                                   = os.getenv("HOME") .. "/.config/awesome/themes/multicolor"
 theme.wallpaper                                 = theme.confdir .. "/wall.jpg"
-theme.font                                      = "Noto Sans Regular 11"
-theme.taglist_font                              = "Noto Sans Regular 13"
+theme.font                                      = "JetBrainsMono Nerd Font 11"
+theme.taglist_font                              = "JetBrainsMono Nerd Font 12"
 theme.menu_bg_normal                            = "#282828"
 theme.menu_bg_focus                             = "#282828"
 theme.bg_normal                                 = "#282828"
@@ -54,8 +54,8 @@ theme.widget_music                              = theme.confdir .. "/icons/note.
 theme.widget_music_on                           = theme.confdir .. "/icons/note.png"
 theme.widget_music_pause                        = theme.confdir .. "/icons/pause.png"
 theme.widget_music_stop                         = theme.confdir .. "/icons/stop.png"
-theme.taglist_squares_sel                       = theme.confdir .. "/icons/square_a.png"
-theme.taglist_squares_unsel                     = theme.confdir .. "/icons/square_b.png"
+-- theme.taglist_squares_sel                       = theme.confdir .. "/icons/square_a.png"
+-- theme.taglist_squares_unsel                     = theme.confdir .. "/icons/square_b.png"
 theme.tasklist_plain_task_name                  = true
 theme.tasklist_disable_icon                     = true
 theme.useless_gap                               = 4
@@ -113,14 +113,15 @@ local colyellow2 = "#fabd2f"
 -- Textclock
 os.setlocale(os.getenv("LANG")) -- to localize the clock
 local clockicon = wibox.widget.imagebox(theme.widget_clock)
-local mytextclock = wibox.widget.textclock(markup(colblue, "%A %d %B ") .. markup(colblue2, ">") .. markup("#de5e1e", "  %H:%M "))
+local mytextclock = wibox.widget.textclock(markup(colblue, " %A %d %B ") .. markup("#de5e1e", "%H:%M "))
 mytextclock.font = theme.font
 
 -- Calendar
 theme.cal = lain.widget.cal({
     attach_to = { mytextclock },
     notification_preset = {
-        font = "Noto Sans Mono Medium 10",
+        -- font = "Noto Sans Mono Medium 10",
+        font = "JetBrainsMono Nerd Font 13",
         fg   = theme.fg_normal,
         bg   = theme.bg_normal
     }
@@ -130,13 +131,14 @@ theme.cal = lain.widget.cal({
 local weathericon = wibox.widget.imagebox(theme.widget_weather)
 theme.weather = lain.widget.weather({
     city_id = 2803138, -- placeholder (Belgium)
-    notification_preset = { font = "Noto Sans Mono Medium 10", fg = theme.fg_normal },
+    -- notification_preset = { font = "Noto Sans Mono Medium 10", fg = theme.fg_normal },
+    notification_preset = { font = "JetBrainsMono Nerd Font 13", fg = theme.fg_normal },
     weather_na_markup = markup.fontfg(theme.font, colpink, "N/A "),
     settings = function()
         descr = weather_now["weather"][1]["description"]:lower()
         units = math.floor(weather_now["main"]["temp"])
         -- widget:set_markup(markup.fontfg(theme.font, "#eca4c4", descr .. " @ " .. units .. "°C "))
-        widget:set_markup(markup.fontfg(theme.font, colpink, units .. "°C "))
+        widget:set_markup(markup.fontfg(theme.font, colpink, " " .. units .. "°C "))
     end
 })
 
@@ -176,7 +178,7 @@ theme.mail = lain.widget.imap({
 local cpuicon = wibox.widget.imagebox(theme.widget_cpu)
 local cpu = lain.widget.cpu({
     settings = function()
-        widget:set_markup(markup.fontfg(theme.font, colpink2, cpu_now.usage .. "% "))
+        widget:set_markup(markup.fontfg(theme.font, colpink2, " " .. cpu_now.usage .. "% "))
     end
 })
 
@@ -184,7 +186,7 @@ local cpu = lain.widget.cpu({
 local tempicon = wibox.widget.imagebox(theme.widget_temp)
 local temp = lain.widget.temp({
     settings = function()
-        widget:set_markup(markup.fontfg(theme.font, colyellow, coretemp_now .. "°C "))
+        widget:set_markup(markup.fontfg(theme.font, colyellow, " " .. coretemp_now .. "°C "))
     end
 })
 
@@ -194,11 +196,11 @@ local bat = lain.widget.bat({
     settings = function()
         local perc = bat_now.perc ~= "N/A" and bat_now.perc .. "%" or bat_now.perc
 
-        if bat_now.ac_status == 1 then
-            perc = perc .. " plug"
-        end
+        -- if bat_now.ac_status == 1 then
+        --     perc = perc .. " plug"
+        -- end
 
-        widget:set_markup(markup.fontfg(theme.font, theme.fg_normal, perc .. " "))
+        widget:set_markup(markup.fontfg(theme.font, theme.fg_normal, "  " .. perc .. " "))
     end
 })
 
@@ -210,7 +212,7 @@ theme.volume = lain.widget.alsa({
             volume_now.level = volume_now.level .. "M"
         end
 
-        widget:set_markup(markup.fontfg(theme.font, colblue2, volume_now.level .. "% "))
+        widget:set_markup(markup.fontfg(theme.font, colblue2, "墳 " .. volume_now.level .. "% "))
     end
 })
 
@@ -226,8 +228,8 @@ local netupinfo = lain.widget.net({
             theme.weather.update()
         end
 
-        widget:set_markup(markup.fontfg(theme.font, colred2, net_now.sent .. " "))
-        netdowninfo:set_markup(markup.fontfg(theme.font, colgreen, net_now.received .. " "))
+        widget:set_markup(markup.fontfg(theme.font, colred2, " " .. net_now.sent .. " "))
+        netdowninfo:set_markup(markup.fontfg(theme.font, colgreen, "  " .. net_now.received .. " "))
     end
 })
 
@@ -235,7 +237,7 @@ local netupinfo = lain.widget.net({
 local memicon = wibox.widget.imagebox(theme.widget_mem)
 local memory = lain.widget.mem({
     settings = function()
-        widget:set_markup(markup.fontfg(theme.font, colyellow2, mem_now.used .. "M "))
+        widget:set_markup(markup.fontfg(theme.font, colyellow2, " " .. mem_now.used .. "M "))
     end
 })
 
@@ -327,23 +329,23 @@ function theme.at_screen_connect(s)
             --mail.widget,
             mpdicon,
             theme.mpd.widget,
-            netdownicon,
+            -- netdownicon,
             netdowninfo,
-            netupicon,
+            -- netupicon,
             netupinfo.widget,
-            volicon,
+            -- volicon,
             theme.volume.widget,
-            memicon,
+            -- memicon,
             memory.widget,
-            cpuicon,
+            -- cpuicon,
             cpu.widget,
-            weathericon,
+            -- weathericon,
             theme.weather.widget,
-            tempicon,
+            -- tempicon,
             temp.widget,
-            baticon,
+            -- baticon,
             bat.widget,
-            clockicon,
+            -- clockicon,
             mytextclock,
 
         },

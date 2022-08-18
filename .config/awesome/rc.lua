@@ -247,12 +247,12 @@ globalkeys = my_table.join(
 
     -- Run launcher
     awful.key({ modkey },            "a",     function ()
-    awful.util.spawn(terminal.. " -e bash -c tmux attach || tmux")  end,
+    awful.util.spawn(terminal.. " -e bash -c 'tmux attach || tmux'")  end,
               {description = "run tmux", group = "launcher"}),
 
     awful.key({ modkey },            "g",     function ()
     awful.spawn(terminal.. " -e bash -c nvim -c 'FZF ~'")   end,
-              {description = "run tmux", group = "launcher"}),
+              {description = "vim+fzf", group = "launcher"}),
 
     awful.key({ modkey },            "d",     function ()
     awful.util.spawn("rofi -show run -theme ~/.config/rofi/themes/gruvbox/gruvbox-dark.rasi")   end,
