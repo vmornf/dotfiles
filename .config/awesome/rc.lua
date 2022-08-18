@@ -31,7 +31,7 @@ if awesome.startup_errors then
 end
 
 beautiful.init(require('theme'))
-require('module.dashboard')
+-- require('module.dashboard')
 
 -- Handle runtime errors after startup
 do

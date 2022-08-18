@@ -220,9 +220,9 @@ map('n', '<M-q>', ':q<CR>') -- Quit neovim
 map('n', '<M-z>', ':noh<CR>')
 -- map('n', '<M-x>', ':call CompileRun()<CR>')
 map('n', 'Y', 'y$') -- Yank till end of line
-map('n', 'F4', '<Esc>:set cursorline!<CR>')
-map('n', 'F5', '<Esc>:setlocal spell! spelllang=en_us<CR>')
-map('n', 'F6', '<Esc>:setlocal spell! spelllang=sv<CR>')
+-- map('n', 'F4', '<Esc>:set cursorline!<CR>')
+-- map('n', 'F5', '<Esc>:setlocal spell! spelllang=en_us<CR>')
+-- map('n', 'F6', '<Esc>:setlocal spell! spelllang=sv<CR>')
 
 map('n', '<leader>p', 'viw"_dP') -- Replace from void
 map('n', '<leader>d', '"_d') -- Delete to void
@@ -311,6 +311,7 @@ map('n', '<leader>wu', ':%s/\\%u200b//g<CR>') -- Remove all extra unicode chars
 map('n', '<leader>wb', ':%s/[[:cntrl:]]//g<CR>') -- Remove all hidden characters
 map('n', '<leader>r', 'gqG<C-o>zz') -- Format rest of the text with vim formatting, go back and center screen
 map('v', '<leader>gu', ':s/\\<./\\u&/g<CR>:noh<CR>') -- Capitalize first letter of each word on visually selected line
+map('v', '<leader>/', '"3y/<C-R>3<CR>') -- Search for highlighted text
 
  -- Setup nvim-cmp.
   local cmp = require'cmp'
@@ -428,6 +429,10 @@ autocmd FileType sql inoremap vie<Tab> create view x as<Enter>select <Esc>/x<Ent
 autocmd FileType vtxt,vimwiki,wiki,text inoremap line<Tab> ----------------------------------------------------------------------------------<Enter>
 autocmd FileType vtxt,vimwiki,wiki,text inoremap date<Tab> <-- <C-R>=strftime("%Y-%m-%d %a")<CR><Esc>A -->
 autocmd FileType c inoremap for<Tab> for(int i = 0; i < val; i++){<Enter><Enter>}<Esc>?val<Enter>ciw
+
+map <F4> <Esc>:set cursorline!<CR>
+map <F5> <Esc>:setlocal spell! spelllang=en_us<CR>
+map <F6> <Esc>:setlocal spell! spelllang=sv<CR>
 
 func! CompileRun()
     exec "w"

@@ -178,7 +178,7 @@ theme.mail = lain.widget.imap({
 local cpuicon = wibox.widget.imagebox(theme.widget_cpu)
 local cpu = lain.widget.cpu({
     settings = function()
-        widget:set_markup(markup.fontfg(theme.font, colpink2, " " .. cpu_now.usage .. "% "))
+        widget:set_markup(markup.fontfg(theme.font, colgreen2, " " .. cpu_now.usage .. "% "))
     end
 })
 
@@ -240,6 +240,20 @@ local memory = lain.widget.mem({
         widget:set_markup(markup.fontfg(theme.font, colyellow2, " " .. mem_now.used .. "M "))
     end
 })
+
+-- Spotify
+-- spotify_widget({
+--     font = theme.font,
+--     -- play_icon = '/usr/share/icons/Papirus-Light/24x24/categories/spotify.svg',
+--     -- pause_icon = '/usr/share/icons/Papirus-Dark/24x24/panel/spotify-indicator.svg',
+--     dim_when_paused = true,
+--     dim_opacity = 0.5,
+--     max_length = -1,
+--     show_tooltip = false,
+--     sp_bin = gears.filesystem.get_configuration_dir() .. 'scripts/sp'
+-- })
+
+local spotify_widget = require("lain.widget.spotify-widget.spotify")
 
 -- MPD
 local musicplr = "urxvt -title Music -g 130x34-320+16 -e ncmpcpp"
@@ -328,7 +342,8 @@ function theme.at_screen_connect(s)
             --mailicon,
             --mail.widget,
             mpdicon,
-            theme.mpd.widget,
+            spotify_widget(),
+            -- theme.mpd.widget,
             -- netdownicon,
             netdowninfo,
             -- netupicon,
