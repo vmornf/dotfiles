@@ -194,7 +194,8 @@
             "default": ["", "", "墳"]
         },
         //"on-click": "pavucontrol"
-        "on-click": "~/.config/hypr/scripts/volume --toggle"
+        //"on-click": "~/.config/hypr/scripts/volume --toggle"
+		"on-click": "pactl set-sink-mute @DEFAULT_SINK@ toggle"
     },
     "custom/media": {
         "format": "{icon} {}",
