@@ -33,7 +33,8 @@ local function worker(user_args)
     local font = args.font or 'Play 9'
     local dim_when_paused = args.dim_when_paused == nil and false or args.dim_when_paused
     local dim_opacity = args.dim_opacity or 0.2
-    local max_length = args.max_length or 15
+    -- local max_length = args.max_length or 15
+    local max_length = args.max_length or 35
     local show_tooltip = args.show_tooltip == nil and true or args.show_tooltip
     local timeout = args.timeout or 1
     local sp_bin = args.sp_bin or 'sp'
@@ -120,8 +121,7 @@ local function worker(user_args)
             cur_artist = artist
             cur_title = title
             cur_album = album
-
-            widget:set_text(artist, title)
+            widget:set_text(" " .. artist .. " -", title)
             widget:set_visible(true)
         end
     end

@@ -16,19 +16,20 @@ local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 local theme                                     = {}
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/powerarrow-blue"
 --theme.wallpaper                                 = theme.dir .. "/starwars.jpg"
-theme.font                                      = "Mononoki Nerd Font 9"
-theme.taglist_font                              = "Droid Sans Bold 7"
-theme.fg_normal                                 = "#ffffff"
+-- theme.font                                      = "Mononoki Nerd Font 9"
+theme.font                                      = "JetBrainsMono Nerd Font 9"
+theme.taglist_font                              = "JetBrainsMono Nerd Font 9"
+theme.fg_normal                                 = "#282828"
 theme.fg_focus                                  = "#8ec07c"
 theme.fg_urgent                                 = "#b74822"
-theme.bg_normal                                 = "#282a36"
-theme.bg_focus                                  = "#FF79C6"
+theme.bg_normal                                 = "#282828"
+theme.bg_focus                                  = "#ebdbb2"
 theme.bg_urgent                                 = "#3F3F3F"
-theme.taglist_fg_focus                          = "#282a36"
-theme.tasklist_bg_focus                         = "#000000"
+theme.taglist_fg_focus                          = "#282828"
+theme.tasklist_bg_focus                         = "#282828"
 theme.tasklist_fg_focus                         = "#8ec07c"
 theme.border_width                              = 2
-theme.border_normal                             = "#282a36"
+theme.border_normal                             = "#282828"
 theme.border_focus                              = "#F07178"
 theme.border_marked                             = "#CC9393"
 theme.titlebar_bg_focus                         = "#3F3F3F"
@@ -185,7 +186,7 @@ theme.mpd = lain.widget.mpd({
             artist = " " .. mpd_now.artist .. " "
             title  = mpd_now.title  .. " "
             mpdicon:set_image(theme.widget_music_on)
-            widget:set_markup(markup.font(theme.font, markup("#FFFFFF", artist) .. " " .. title))
+            widget:set_markup(markup.font(theme.font, markup("#ebdbb2", artist) .. " " .. title))
         elseif mpd_now.state == "pause" then
             widget:set_markup(markup.font(theme.font, " mpd paused "))
             mpdicon:set_image(theme.widget_music_pause)
@@ -238,13 +239,14 @@ Copy/paste the city code in the URL to this file in city_id
 --]]
 local weathericon = wibox.widget.imagebox(theme.widget_weather)
 theme.weather = lain.widget.weather({
-    city_id = 2803138, -- placeholder (Belgium)
-    notification_preset = { font = "Mononoki Nerd Font 11", fg = theme.fg_normal },
-    weather_na_markup = markup.fontfg(theme.font, "#ffffff", "N/A "),
+    city_id = 2673730,
+    notification_preset = { font = "JetBrainsMono Nerd Font 11", fg = theme.fg_normal },
+    weather_na_markup = markup.fontfg(theme.font, "#ebdbb2", "N/A "),
     settings = function()
         descr = weather_now["weather"][1]["description"]:lower()
         units = math.floor(weather_now["main"]["temp"])
-        widget:set_markup(markup.fontfg(theme.font, "#ffffff", descr .. " @ " .. units .. "°C "))
+        -- widget:set_markup(markup.fontfg(theme.font, "#ebdbb2", descr .. " @ " .. units .. "°C "))
+        widget:set_markup(markup.fontfg(theme.font, "#ebdbb2", "  " .. units .. "°C "))
     end
 })
 
@@ -411,7 +413,7 @@ function theme.at_screen_connect(s)
             arrow("#8ec07c", "#458588"),
             wibox.container.background(wibox.container.margin(wibox.widget { tempicon, temp.widget, layout = wibox.layout.align.horizontal }, 4, 4), "#458588"),
             arrow("#458588", "#8ec07c"),
-            wibox.container.background(wibox.container.margin(wibox.widget { weathericon, theme.weather.widget, layout = wibox.layout.align.horizontal }, 3, 3), "#8ec07c"),
+            wibox.container.background(wibox.container.margin(wibox.widget { theme.weather.widget, layout = wibox.layout.align.horizontal }, 3, 3), "#8ec07c"),
             arrow("#8ec07c", "#458588"),
             wibox.container.background(wibox.container.margin(wibox.widget { baticon, bat.widget, layout = wibox.layout.align.horizontal }, 3, 3), "#458588"),
             arrow("#458588", "#8ec07c"),

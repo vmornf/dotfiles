@@ -10,7 +10,7 @@ local opt = vim.opt
 local A   = vim.api
 
 -- cmd('syntax on')
--- vim.api.nvim_command('filetype usein indent on')
+-- vim.api.nvim_command('filetype plugin indent on')
 
 o.termguicolors = true
 -- o.background = 'dark'
@@ -32,11 +32,11 @@ o.relativenumber = true
 -- o.signcolumn = 'yes'
 o.cursorline = true
 
-o.expandtab = true
+-- o.expandtab = true
 o.smarttab = true
-o.cindent = true
+-- o.cindent = true
 o.autoindent = true
--- o.smartindent = true
+o.smartindent = true
 o.wrap = true
 -- o.textwidth = 300
 o.tabstop = 4
@@ -72,11 +72,10 @@ o.splitbelow = true
 o.splitright = true
 
 -- Preserve view while jumping
--- BUG This option causes an error!
 -- o.jumpoptions = 'view'
 
--- BUG: this won't update the search count after pressing `n` or `N`
 -- When running macros and regexes on a large file, lazy redraw tells neovim/vim not to draw the screen
+-- You can enable this inside vim with :set lazyredraw
 -- o.lazyredraw = true
 
 -- Better folds (don't fold by default)
@@ -100,7 +99,7 @@ vim.scriptencoding = 'utf-8'
 vim.opt.encoding = 'utf-8'
 vim.opt.fileencoding = 'utf-8'
 -- vim.cmd("autocmd!")
-vim.opt.cmdheight = 1
+-- vim.opt.cmdheight = 1
 --
 vim.cmd([[
 set runtimepath+=~/.vim
@@ -119,6 +118,8 @@ set shortmess+=c
 set completeopt+=longest,menuone
 set completeopt+=preview
 autocmd FileType * setlocal formatoptions-=c formatoptions-=r formatoptions-=o
+filetype plugin indent on
+
 
 let g:jedi#popup_on_dot = 1
 " Syntastic
@@ -143,6 +144,7 @@ require('lualine').setup {
   options = {
     icons_enabled = true,
     theme = 'gruvbox',
+    -- theme = 'catppuccin',
     refresh = {
       statusline = 1000,
       tabline = 1000,
@@ -186,6 +188,7 @@ end
 -- local ok, _ = pcall(vim.cmd, 'colorscheme base16-gruvbox-dark-medium')
 -- vim.g.gruvbox_contrast_dark = 'hard'
 vim.cmd("colorscheme gruvbox")
+-- vim.cmd("colorscheme catppuccin")
 
 -- Keybinds
 local function map(m, k, v)
@@ -220,9 +223,9 @@ map('n', '<M-q>', ':q<CR>') -- Quit neovim
 map('n', '<M-z>', ':noh<CR>')
 -- map('n', '<M-x>', ':call CompileRun()<CR>')
 map('n', 'Y', 'y$') -- Yank till end of line
--- map('n', 'F4', '<Esc>:set cursorline!<CR>')
--- map('n', 'F5', '<Esc>:setlocal spell! spelllang=en_us<CR>')
--- map('n', 'F6', '<Esc>:setlocal spell! spelllang=sv<CR>')
+-- map('n', 'F4', ':set cursorline!<CR>')
+-- map('n', 'F5', ':setlocal spell! spelllang=en_us<CR>')
+-- map('n', 'F6', ':setlocal spell! spelllang=sv<CR>')
 
 map('n', '<leader>p', 'viw"_dP') -- Replace from void
 map('n', '<leader>d', '"_d') -- Delete to void
@@ -235,20 +238,24 @@ map('n', '<leader>3', '"3p')
 map('n', '<leader>4', '"4p')
 map('n', '<leader>5', '"5p')
 
-map('n', '<M-w>', ':NERDTreeToggle ~/<CR>')
-map('n', '<M-e>', ':NERDTreeToggle %:p<CR>')
+-- map('n', '<M-w>', ':NERDTreeToggle ~/<CR>')
+-- map('n', '<M-e>', ':NERDTreeToggle %:p<CR>')
+map('n', '<M-w>', ':silent! NERDTreeToggle ~/<CR>')
+map('n', '<M-e>', ':silent! NERDTreeToggle %:p<CR>')
 -- map('n', '<C-b>', ':NERDTreeToggle<CR>')
 map('n', '<M-d>', ':FZF<CR>')
 map('n', '<M-a>', ':FZF ~/<CR>')
 map('n', '<M-A>', ':FZF /<CR>')
 
 -- Vimgrep and QuickFix Lists
-map('n', '<M-f>', ':vimgrep // **/*.txt<left><left><left><left><left><left><left><left><left><left><C-f>i')
-map('n', '<M-g>', ':vimgrep // **/*<Left><Left><Left><Left><Left><Left><C-f>i')
-map('n', '<M-v>', ':cfdo s//x/gc<left><left><left><left><left><C-f>i')
+map('n', '<M-f>', ':vimgrep //g **/*.txt<C-f><Esc>11hi')
+map('n', '<M-g>', ':vimgrep //g **/*.*<C-f><Esc>9hi') -- Search all
+map('n', '<M-G>', ':vimgrep //g **/.*<C-f><Esc>8hi') -- Search dotfiles
+map('n', '<M-v>', ':cdo s///gc | update<C-f><Esc>13hi')
+-- map('n', '<M-v>', ':cfdo s//x/gc<left><left><left><left><left><C-f>i')
 map('n', '<M-c>', ':cnext<CR>')
 map('n', '<M-p>', ':cprev<CR>')
-map('n', '<M-l>', ':clast<CR>')
+map('n', '<M-P>', ':clast<CR>')
 map('n', '<M-b>', ':copen<CR>')
 
 -- Window management and movement
@@ -257,8 +264,8 @@ map('n', '<M-i>', ':resize -2<CR>')
 map('n', '<M-o>', ':vertical resize +2<CR>')
 map('n', '<M-y>', ':vertical resize -2<CR>')
 map('n', '<M-h>', '<Plug>WinMoveLeft')
-map('n', '<M-j>', '<Plug>WinMoveDown')
-map('n', '<M-k>', '<Plug>WinMoveUp')
+map('n', '<M-J>', '<Plug>WinMoveDown')
+map('n', '<M-K>', '<Plug>WinMoveUp')
 map('n', '<M-l>', '<Plug>WinMoveRight')
 
 -- Moving text and indentation
@@ -312,6 +319,7 @@ map('n', '<leader>wb', ':%s/[[:cntrl:]]//g<CR>') -- Remove all hidden characters
 map('n', '<leader>r', 'gqG<C-o>zz') -- Format rest of the text with vim formatting, go back and center screen
 map('v', '<leader>gu', ':s/\\<./\\u&/g<CR>:noh<CR>') -- Capitalize first letter of each word on visually selected line
 map('v', '<leader>/', '"3y/<C-R>3<CR>') -- Search for highlighted text
+map('v', '<leader>%', '/\\%V') -- Search in highlighted text
 
  -- Setup nvim-cmp.
   local cmp = require'cmp'
@@ -396,8 +404,10 @@ map('v', '<leader>/', '"3y/<C-R>3<CR>') -- Search for highlighted text
     })
   })
 
-  -- Setup lspconfig.
-  local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+  -- Setup lspconfig (line below deprecated)
+  -- local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+  local capabilities = require('cmp_nvim_lsp').default_capabilities(vim.lsp.protocol.make_client_capabilities())
+
   -- Replace <YOUR_LSP_SERVER> with each lsp server you've enabled.
   -- require('lspconfig')['<YOUR_LSP_SERVER>'].setup {
     -- capabilities = capabilities
@@ -417,10 +427,19 @@ autocmd FileType java inoremap fore<Tab> for (String s : obj){<Enter><Enter>}<Es
 autocmd FileType java inoremap for<Tab> for(int i = 0; i < val; i++){<Enter><Enter>}<Esc>?val<Enter>ciw
 autocmd FileType java inoremap sout<Tab> System.out.println("");<Esc>?""<Enter>li
 autocmd FileType java inoremap psvm<Tab> public static void main(String[] args){<Enter><Enter>}<Esc>?{<Enter>o
+autocmd FileType java inoremap hellow<Tab> <Esc>:r /home/jonas/Code/Java/hellow.java<Enter><Esc>/hellow<Enter>ciw
+
+autocmd FileType c inoremap for<Tab> for(int i = 0; i < val; i++){<Enter><Enter>}<Esc>?val<Enter>ciw
+autocmd FileType c inoremap hellow<Tab> <Esc>:r /home/jonas/Code/C/hellow.c<Enter>
+autocmd FileType cpp inoremap for<Tab> for(int i = 0; i < val; i++){<Enter><Enter>}<Esc>?val<Enter>ciw
+autocmd FileType cpp inoremap hellow<Tab> <Esc>:r /home/jonas/Code/C++/hellow.cpp<Enter>
 
 autocmd FileType cs inoremap sout<Tab> Console.WriteLine("");<Esc>?""<Enter>li
 autocmd FileType cs inoremap fore<Tab> for each (object o : obj){<Enter><Enter>}<Esc>?obj<Enter>ciw
 autocmd FileType cs inoremap for<Tab> for(int i = 0; i < val; i++){<Enter><Enter>}<Esc>?val<Enter>ciw
+autocmd FileType cs inoremap hellow<Tab> <Esc>:r /home/jonas/Code/C\#/hellow.cs<Enter><Esc>/Hellow<Enter>ciw
+
+autocmd FileType py,python inoremap hellow<Tab> <Esc>:r /home/jonas/Code/Python/hellow.py<Enter>
 
 autocmd FileType sql inoremap fun<Tab> delimiter //<Enter>create function x ()<Enter>returns int<Enter>no sql<Enter>begin<Enter><Enter><Enter>end //<Enter>delimiter ;<Esc>/x<Enter>GN
 autocmd FileType sql inoremap pro<Tab> delimiter //<Enter>create procedure x ()<Enter>begin<Enter><Enter><Enter>end //<Enter>delimiter ;<Esc>/x<Enter>GN
@@ -428,7 +447,6 @@ autocmd FileType sql inoremap vie<Tab> create view x as<Enter>select <Esc>/x<Ent
 
 autocmd FileType vtxt,vimwiki,wiki,text inoremap line<Tab> ----------------------------------------------------------------------------------<Enter>
 autocmd FileType vtxt,vimwiki,wiki,text inoremap date<Tab> <-- <C-R>=strftime("%Y-%m-%d %a")<CR><Esc>A -->
-autocmd FileType c inoremap for<Tab> for(int i = 0; i < val; i++){<Enter><Enter>}<Esc>?val<Enter>ciw
 
 map <F4> <Esc>:set cursorline!<CR>
 map <F5> <Esc>:setlocal spell! spelllang=en_us<CR>
@@ -437,7 +455,7 @@ map <F6> <Esc>:setlocal spell! spelllang=sv<CR>
 func! CompileRun()
     exec "w"
     if &filetype == 'c'
-        exec "!gcc % && ./a.out"
+        exec "!gcc % && time ./a.out"
     elseif &filetype == 'cpp'
         "exec "!g++ % -o %< -lbgi -lgdi32 -lcomdlg32 -luuid -loleaut32 -lole32"
         exec "!g++ -pthread % -o %<"
@@ -450,6 +468,7 @@ func! CompileRun()
         exec "!time bash %"
     elseif &filetype == 'python'
         exec "!python3 %"
+        "exec "!time python3 %"
     elseif &filetype == 'html'
         exec "!firefox % &"
     elseif &filetype == 'javascript'
@@ -461,9 +480,14 @@ func! CompileRun()
     elseif &filetype == 'go'
         exec "!go build %<"
         exec "!time go run %"
+    elseif &filetype == 'rust'
+        exec "!rustc %"
+        exec "!time ./%:r"
+    elseif &filetype == 'lua'
+        exec "!time lua %"
     elseif &filetype == 'mkd'
-        exec "!~/.vim/markdown.pl % > %.html &"
-        exec "!firefox %.html &"
+        "exec "!~/.vim/markdown.pl % > %.html &"
+        exec "!firefox % &"
     elseif &filetype == 'cs'
         "exec "!csc %"
         "exec "!%:r.exe"
@@ -520,6 +544,17 @@ return require('packer').startup(function()
 
   -- Colorschemes
   use("gruvbox-community/gruvbox")
+  use {
+      "catppuccin/nvim",
+      as = "catppuccin",
+      config = function()
+          require("catppuccin").setup {
+              --flavour = "macchiato" -- mocha, macchiato, frappe, latte
+              flavour = "mocha"
+          }
+          -- vim.api.nvim_command "colorscheme catppuccin"
+      end
+  }
   -- use 'RRethy/nvim-base16'
 
   -- Other stuff
