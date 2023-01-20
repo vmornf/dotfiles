@@ -1,0 +1,4 @@
+#!/bin/sh
+export XAUTHORITY=/home/jonas/.Xauthority
+xauth generate $DISPLAY
+
